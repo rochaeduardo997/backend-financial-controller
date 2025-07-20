@@ -1,6 +1,9 @@
+import { usersRepositoryMock } from '@shared/mocks/repositories/users.repository.mock';
 import { UsersService } from '@users/services/users.service';
 import { TUser } from '@users/types/users.type';
 import { IUsersRepository } from '@users/users.repository.interface';
+import { config } from 'dotenv';
+config();
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -20,21 +23,8 @@ describe('UsersService', () => {
   };
 
   beforeAll(() => {
-    const uRepo: IUsersRepository = {
-      deleteById: () => Promise.resolve(true),
-      findAll: () =>
-        //@ts-ignore
-        Promise.resolve([
-          { ...userMock1, password: undefined },
-          { ...userMock2, password: undefined },
-        ]),
-      //@ts-ignore
-      findById: () => Promise.resolve({ ...userMock1, password: undefined }),
-      //@ts-ignore
-      save: () => Promise.resolve({ ...userMock1, password: undefined }),
-      //@ts-ignore
-      update: () => Promise.resolve({ ...userMock1, password: undefined }),
-    };
+    //@ts-ignore
+    const uRepo: IUsersRepository = usersRepositoryMock(userMock1, userMock2);
     service = new UsersService(uRepo);
   });
 
