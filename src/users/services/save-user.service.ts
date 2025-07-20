@@ -9,7 +9,7 @@ export class SaveUserService {
   private readonly PASSWORD_ENCRYPT_SECRET =
     process.env.PASSWORD_ENCRYPT_SECRET || 'secret';
   private readonly PASSWORD_ENCRYPT_LENGTH =
-    process.env.PASSWORD_ENCRYPT_LENGTH || 2;
+    process.env.PASSWORD_ENCRYPT_LENGTH || 10;
 
   constructor(
     @Inject('IUsersRepository')
