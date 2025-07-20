@@ -31,4 +31,10 @@ describe('UsersService', () => {
     const expected = { ...userMock2, id: userMock1.id, password: undefined };
     expect(result).toEqual(expected);
   });
+
+  test('should find user by id', async () => {
+    const result = await service.findById.execute({ id: userMock1.id });
+    const expected = { ...userMock1, password: undefined };
+    expect(result).toEqual(expected);
+  });
 });

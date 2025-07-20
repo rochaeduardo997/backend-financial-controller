@@ -2,11 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IUsersRepository } from '@users/users.repository.interface';
 import { SaveUserService } from '@users/services/save-user.service';
 import { UpdateUserService } from './update-user.service';
+import { FindUserByIdService } from './find-user-by-id.service';
 
 @Injectable()
 export class UsersService {
   save: SaveUserService;
   update: UpdateUserService;
+  findById: FindUserByIdService;
 
   constructor(
     @Inject('IUsersRepository')
@@ -14,5 +16,6 @@ export class UsersService {
   ) {
     this.save = new SaveUserService(uRepo);
     this.update = new UpdateUserService(uRepo);
+    this.findById = new FindUserByIdService(uRepo);
   }
 }
