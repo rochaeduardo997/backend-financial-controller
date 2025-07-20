@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDTO } from '@users/dtos/create-user.dto';
+import { SaveUserDTO } from '@users/dtos/save-user.dto';
 import { TUser } from '@users/types/users.type';
 import { IUsersRepository } from '@users/users.repository.interface';
 import { scryptSync } from 'crypto';
@@ -16,7 +16,7 @@ export class SaveUserService {
     private readonly uRepo: IUsersRepository,
   ) {}
 
-  async execute(input: CreateUserDTO): Promise<TOutput> {
+  async execute(input: SaveUserDTO): Promise<TOutput> {
     const password = scryptSync(
       input.password,
       this.PASSWORD_ENCRYPT_SECRET,
