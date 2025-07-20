@@ -11,5 +11,5 @@ export const usersRepositoryMock = (...mocks: TUser[]): IUsersRepository => ({
   //@ts-ignore
   save: () => Promise.resolve({ ...mocks[0], password: undefined }),
   //@ts-ignore
-  update: () => Promise.resolve({ ...mocks[0], password: undefined }),
+  update: (mock: TUser) => Promise.resolve({ ...mock, password: undefined }),
 });

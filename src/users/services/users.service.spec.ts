@@ -22,4 +22,13 @@ describe('UsersService', () => {
     const expected = { ...userMock1, password: undefined };
     expect(result).toEqual(expected);
   });
+
+  test('should update an existing user', async () => {
+    const result = await service.update.execute({
+      ...userMock2,
+      id: userMock1.id,
+    });
+    const expected = { ...userMock2, id: userMock1.id, password: undefined };
+    expect(result).toEqual(expected);
+  });
 });
