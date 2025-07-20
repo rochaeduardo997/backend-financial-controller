@@ -1,4 +1,5 @@
 import { usersRepositoryMock } from '@shared/mocks/repositories/users.repository.mock';
+import { userMock } from '@shared/mocks/types/users.type.mock';
 import { UsersService } from '@users/services/users.service';
 import { TUser } from '@users/types/users.type';
 import { IUsersRepository } from '@users/users.repository.interface';
@@ -7,23 +8,11 @@ config();
 
 describe('UsersService', () => {
   let service: UsersService;
-  const userMock1: TUser = {
-    email: 'email',
-    id: 100,
-    name: 'name',
-    password: 'password',
-    username: 'username',
-  };
-  const userMock2: TUser = {
-    email: 'email',
-    id: 101,
-    name: 'name',
-    password: 'password',
-    username: 'username',
-  };
+
+  const userMock1: TUser = userMock(1);
+  const userMock2: TUser = userMock(2);
 
   beforeAll(() => {
-    //@ts-ignore
     const uRepo: IUsersRepository = usersRepositoryMock(userMock1, userMock2);
     service = new UsersService(uRepo);
   });
