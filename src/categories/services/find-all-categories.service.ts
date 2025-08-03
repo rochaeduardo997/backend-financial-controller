@@ -1,21 +1,22 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { ICategoriesRepository } from '@categories/categories.repository.interface';
-import { SaveCategoryDTO } from '@categories/dtos/save-category.dto';
 import { TCategory } from '@categories/types/categories.type';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
-export class SaveCategoryService {
+export class FindAllCategoriesService {
   constructor(
     @Inject('ICategoriesRepository')
     private readonly cRepo: ICategoriesRepository,
   ) {}
 
   async execute(input: TInput): Promise<TOutput> {
-    const result = await this.cRepo.save({ ...input });
+    const result = await this.cRepo.findAllFromUser({
+      userId: input.userId,
+    });
     return result;
   }
 }
 
-type TInput = SaveCategoryDTO & { userId: number };
-type TOutput = TCategory;
+type TInput = { userId: number };
+type TOutput = TCategory[];

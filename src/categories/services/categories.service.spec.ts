@@ -39,8 +39,19 @@ describe('UsersService', () => {
   });
 
   test('should find category by id', async () => {
-    const result = await service.findById.execute({ id: categoryMock1.id });
+    const result = await service.findById.execute({
+      id: categoryMock1.id,
+      userId: categoryMock1.userId,
+    });
     const expected = { ...categoryMock1 };
+    expect(result).toEqual(expected);
+  });
+
+  test('should find all categories by user id', async () => {
+    const result = await service.findAll.execute({
+      userId: categoryMock1.userId,
+    });
+    const expected = [categoryMock1, categoryMock2];
     expect(result).toEqual(expected);
   });
 });

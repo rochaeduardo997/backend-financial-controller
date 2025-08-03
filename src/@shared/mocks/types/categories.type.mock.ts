@@ -6,4 +6,5 @@ export const categoryMock = (index: number): TCategory => ({
   description: 'description',
   createdAt: new Date('2022-01-01'),
   updatedAt: new Date('2022-01-02'),
+  userId: 1,
 });
