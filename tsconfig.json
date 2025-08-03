@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@users/*": ["src/users/*"],
+      "@categories/*": ["src/categories/*"],
       "@shared/*": ["src/@shared/*"]
     }
   }

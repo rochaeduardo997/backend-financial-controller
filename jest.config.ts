@@ -13,6 +13,7 @@ export const base = {
   moduleNameMapper: {
     '^@shared/(.*)$': `${process.cwd()}/src/@shared/$1`,
     '^@users/(.*)$': `${process.cwd()}/src/users/$1`,
+    '^@categories/(.*)$': `${process.cwd()}/src/categories/$1`,
   },
   testEnvironment: 'node',
   testRegex: '.*\\.spec\\.ts$',
