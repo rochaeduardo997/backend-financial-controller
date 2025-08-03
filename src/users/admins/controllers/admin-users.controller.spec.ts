@@ -3,15 +3,16 @@ import request from 'supertest';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { UsersController } from '@users/controllers/users.controller';
-import { UsersService } from '@users/services/users.service';
 import { usersRepositoryMock } from '@shared/mocks/repositories/users.repository.mock';
 import { userMock } from '@shared/mocks/types/users.type.mock';
 import { config } from 'dotenv';
 import { AuthGuard } from '@shared/guards/auth.guard';
+import { AdminUsersController } from '@users/admins/controllers/admin-users.controller';
+import { AdminUsersService } from '@users/admins/services/admins.service';
+import { UsersService } from '@users/services/users.service';
 config();
 
-describe('UserController', () => {
+describe('UserAdminController', () => {
   let app: INestApplication;
 
   const userMock1 = userMock(1);
@@ -19,8 +20,9 @@ describe('UserController', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [UsersController],
+      controllers: [AdminUsersController],
       providers: [
+        AdminUsersService,
         UsersService,
         {
           provide: 'IUsersRepository',
@@ -43,12 +45,34 @@ describe('UserController', () => {
     await app.init();
   });
 
+  describe('Find all', () => {
+    describe('Success', () => {
+      it('should find all users', async () => {
+        const { body, status } = await request(app.getHttpServer())
+          .get('/admin/users')
+          .set('Authorization', 'Bearer token');
+        const expected = [
+          {
+            ...userMock1,
+            password: undefined,
+          },
+          {
+            ...userMock2,
+            password: undefined,
+          },
+        ];
+        expect(body).toEqual(expected);
+        expect(status).toBe(200);
+      });
+    });
+  });
+
   describe('Save', () => {
     describe('Success', () => {
       it('should save a new user', async () => {
         const toSend = { ...userMock1, id: undefined };
         const { body, status } = await request(app.getHttpServer())
-          .post('/users')
+          .post('/admin/users')
           .send(toSend);
         const expected = {
           ...userMock1,
@@ -104,7 +128,7 @@ describe('UserController', () => {
           id: undefined,
         };
         const { body, status } = await request(app.getHttpServer())
-          .post('/users')
+          .post('/admin/users')
           .send(toSend);
         expect(body.message[0]).toEqual(expected);
         expect(status).toBe(400);
@@ -116,7 +140,7 @@ describe('UserController', () => {
     describe('Success', () => {
       it('should find user by id', async () => {
         const { body, status } = await request(app.getHttpServer())
-          .get('/users/me')
+          .get('/admin/users/1')
           .set('Authorization', 'Bearer token');
         const expected = {
           ...userMock1,
@@ -133,7 +157,7 @@ describe('UserController', () => {
       it('should find user by id', async () => {
         const toSend = { ...userMock2, id: undefined, password: undefined };
         const { body, status } = await request(app.getHttpServer())
-          .patch('/users/me')
+          .patch('/admin/users/1')
           .set('Authorization', 'Bearer token')
           .send(toSend);
         const expected = {
