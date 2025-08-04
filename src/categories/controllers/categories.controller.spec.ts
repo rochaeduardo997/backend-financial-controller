@@ -3,28 +3,28 @@ import request from 'supertest';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { UsersController } from '@users/controllers/users.controller';
-import { UsersService } from '@users/services/users.service';
-import { usersRepositoryMock } from '@shared/mocks/repositories/users.repository.mock';
-import { userMock } from '@shared/mocks/types/users.type.mock';
 import { config } from 'dotenv';
 import { AuthGuard } from '@shared/guards/auth.guard';
+import { categoryMock } from '@shared/mocks/types/categories.type.mock';
+import { CategoriesController } from '@categories/controllers/categories.controller';
+import { categoriesRepositoryMock } from '@shared/mocks/repositories/categories.repository.mock';
+import { CategoriesService } from '@categories/services/categories.service';
 config();
 
 describe('UserController', () => {
   let app: INestApplication;
 
-  const userMock1 = userMock(1);
-  const userMock2 = userMock(2);
+  const categoryMock1 = categoryMock(1);
+  const categoryMock2 = categoryMock(2);
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [UsersController],
+      controllers: [CategoriesController],
       providers: [
-        UsersService,
+        CategoriesService,
         {
-          provide: 'IUsersRepository',
-          useValue: usersRepositoryMock(userMock1, userMock2),
+          provide: 'ICategoriesRepository',
+          useValue: categoriesRepositoryMock(categoryMock1, categoryMock2),
         },
       ],
     })
@@ -45,13 +45,19 @@ describe('UserController', () => {
 
   describe('Save', () => {
     describe('Success', () => {
-      it('should save a new user', async () => {
-        const toSend = { ...userMock1, id: undefined };
+      it('should save a new category', async () => {
+        const toSend = {
+          ...categoryMock1,
+          id: undefined,
+          createdAt: undefined,
+          updatedAt: undefined,
+          userId: undefined,
+        };
         const { body, status } = await request(app.getHttpServer())
-          .post('/users')
+          .post('/categories')
           .send(toSend);
         const expected = {
-          ...userMock1,
+          ...categoryMock1,
           password: undefined,
         };
         expect(body).toEqual(expected);
@@ -61,29 +67,6 @@ describe('UserController', () => {
 
     describe('Fail', () => {
       it.each([
-        ['by invalid email', { email: 'invalid' }, 'email must be an email'],
-        [
-          'by invalid password type',
-          { password: 1 },
-          'password must be a string',
-        ],
-        [
-          'by invalid password',
-          { password: 'pass' },
-          'password must be longer than or equal to 8 characters',
-        ],
-        [
-          'by small password length',
-          { password: '1aA!' },
-          'password must be longer than or equal to 8 characters',
-        ],
-        [
-          'by big password length',
-          {
-            password: `${Array.from({ length: 51 }, (v, i) => i + 1).toString()}aA!`,
-          },
-          'password must be shorter than or equal to 50 characters',
-        ],
         ['by invalid name type', { name: 1 }, 'name must be a string'],
         [
           'by small name',
@@ -91,20 +74,30 @@ describe('UserController', () => {
           'name must be longer than or equal to 3 characters',
         ],
         [
-          'by small name',
+          'by longer name',
           {
             name: `${Array.from({ length: 51 }, (v, i) => i + 1).toString()}aA!`,
           },
           'name must be shorter than or equal to 50 characters',
         ],
+        [
+          'by longer description',
+          {
+            description: `${Array.from({ length: 51 }, (v, i) => i + 1).toString()}aA!`,
+          },
+          'description must be shorter than or equal to 70 characters',
+        ],
       ])('should fail on save a new user %s', async (_, field, expected) => {
         const toSend = {
-          ...userMock1,
+          ...categoryMock1,
           ...field,
           id: undefined,
+          createdAt: undefined,
+          updatedAt: undefined,
+          userId: undefined,
         };
         const { body, status } = await request(app.getHttpServer())
-          .post('/users')
+          .post('/categories')
           .send(toSend);
         expect(body.message[0]).toEqual(expected);
         expect(status).toBe(400);
@@ -114,14 +107,24 @@ describe('UserController', () => {
 
   describe('Find by id', () => {
     describe('Success', () => {
-      it('should find user by id', async () => {
+      it('should find category by id', async () => {
         const { body, status } = await request(app.getHttpServer())
-          .get('/users')
+          .get('/categories/1')
           .set('Authorization', 'Bearer token');
-        const expected = {
-          ...userMock1,
-          password: undefined,
-        };
+        const expected = { ...categoryMock1 };
+        expect(body).toEqual(expected);
+        expect(status).toBe(200);
+      });
+    });
+  });
+
+  describe('Find all', () => {
+    describe('Success', () => {
+      it('should find all categories', async () => {
+        const { body, status } = await request(app.getHttpServer())
+          .get('/categories')
+          .set('Authorization', 'Bearer token');
+        const expected = [categoryMock1, categoryMock2];
         expect(body).toEqual(expected);
         expect(status).toBe(200);
       });
@@ -130,16 +133,21 @@ describe('UserController', () => {
 
   describe('Update', () => {
     describe('Success', () => {
-      it('should find user by id', async () => {
-        const toSend = { ...userMock2, id: undefined, password: undefined };
+      it('should update category', async () => {
+        const toSend = {
+          ...categoryMock2,
+          id: undefined,
+          createdAt: undefined,
+          updatedAt: undefined,
+          userId: undefined,
+        };
         const { body, status } = await request(app.getHttpServer())
-          .patch('/users')
+          .patch('/categories/1')
           .set('Authorization', 'Bearer token')
           .send(toSend);
         const expected = {
-          ...userMock2,
-          id: userMock1.id,
-          password: undefined,
+          ...categoryMock2,
+          id: categoryMock1.id,
         };
         expect(body).toEqual(expected);
         expect(status).toBe(200);

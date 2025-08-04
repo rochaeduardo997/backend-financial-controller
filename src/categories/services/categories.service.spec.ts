@@ -1,5 +1,4 @@
 import { ICategoriesRepository } from '@categories/categories.repository.interface';
-import { TCategory } from '@categories/types/categories.type';
 import { categoryMock } from '@shared/mocks/types/categories.type.mock';
 import { config } from 'dotenv';
 import { CategoriesService } from '@categories/services/categories.service';
@@ -9,8 +8,8 @@ config();
 describe('UsersService', () => {
   let service: CategoriesService;
 
-  const categoryMock1: TCategory = categoryMock(1);
-  const categoryMock2: TCategory = categoryMock(2);
+  const categoryMock1 = categoryMock(1);
+  const categoryMock2 = categoryMock(2);
 
   beforeAll(() => {
     const cRepo: ICategoriesRepository = categoriesRepositoryMock(

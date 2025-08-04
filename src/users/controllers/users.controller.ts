@@ -36,7 +36,7 @@ export class UsersController {
     return result;
   }
 
-  @Get('/me')
+  @Get('/')
   @HttpCode(HttpStatus.OK)
   async findById(@Request() req: Request) {
     const id = req.user?.id;
@@ -44,7 +44,7 @@ export class UsersController {
     return result;
   }
 
-  @Patch('/me')
+  @Patch('/')
   @HttpCode(HttpStatus.OK)
   async update(@Request() req: Request, @Body() input: UpdateUserDTO) {
     const id = req.user?.id;

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 import { ICategoriesRepository } from '@categories/categories.repository.interface';
-import { FindCategoryByIdDTO } from '@categories/dtos/find-category-by-id.dto';
 import { TCategory } from '@categories/types/categories.type';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -20,5 +19,5 @@ export class FindCategoryByIdService {
   }
 }
 
-type TInput = FindCategoryByIdDTO & { userId: number };
+type TInput = { id: number; userId: number };
 type TOutput = TCategory;
