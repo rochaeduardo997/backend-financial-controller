@@ -5,7 +5,7 @@ import { CategoriesService } from '@categories/services/categories.service';
 import { categoriesRepositoryMock } from '@shared/mocks/repositories/categories.repository.mock';
 config();
 
-describe('UsersService', () => {
+describe('CategoriesService', () => {
   let service: CategoriesService;
 
   const categoryMock1 = categoryMock(1);
@@ -19,13 +19,13 @@ describe('UsersService', () => {
     service = new CategoriesService(cRepo);
   });
 
-  test('should save a new user', async () => {
+  test('should save a new category', async () => {
     const result = await service.save.execute(categoryMock1);
     const expected = { ...categoryMock1 };
     expect(result).toEqual(expected);
   });
 
-  test('should update an existing user', async () => {
+  test('should update an existing category', async () => {
     const result = await service.update.execute({
       ...categoryMock2,
       id: categoryMock1.id,
@@ -46,7 +46,7 @@ describe('UsersService', () => {
     expect(result).toEqual(expected);
   });
 
-  test('should find all categories by user id', async () => {
+  test('should find all categories by category id', async () => {
     const result = await service.findAll.execute({
       userId: categoryMock1.userId,
     });
